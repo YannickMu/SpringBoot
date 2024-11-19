@@ -12,23 +12,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URL;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/helloworld")
+@RequestMapping(HelloWorldController.PATH)
 public class HelloWorldController {
+    public static final String PATH = "/helloworld";
     @GetMapping
     @Operation(summary = "Returns \"Hello World!\" if random random int between 1 and 100 is under 51 or conflict if its above.")
     @ApiResponses(value = {
             @ApiResponse(description = "get Hello World!", responseCode = "200", content = {@Content(examples = @ExampleObject(value = "Hello World!"), schema = @Schema(implementation = String.class))}),
-            @ApiResponse(description = "get Conflict", responseCode = "409", content = @Content(examples = @ExampleObject(value = "Something went wrong!"), schema = @Schema(implementation = String.class))),
+            @ApiResponse(description = "get Conflict", responseCode = "200", content = @Content(examples = @ExampleObject(value = "Something went wrong!"), schema = @Schema(implementation = String.class))),
     })
     public ResponseEntity<?> helloWorld() {
         Random random = new Random();
         if (random.nextInt(1, 100) <= 50) {
-            return ResponseEntity.status(200).body("Hello World!");
+            return ResponseEntity.status(HttpStatus.OK).body("Hello World!");
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong!");
+            return ResponseEntity.status(HttpStatus.OK).body("Something went wrong!");
         }
     }
 }
